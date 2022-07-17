@@ -28,12 +28,18 @@ internal sealed class PlayerInputHandler : MonoBehaviour
     private float m_rotationDeltaVerticalInput = 0f;
     private float m_rotationHorizontal = 0f;
     private float m_rotationVertical = 0f;
+    private bool m_jumpButtonPressed;
 
 
     private void Awake()
     {
         m_inputMap = new InputMap();
         m_playerInputActions = m_inputMap.PlayerInput;
+    }
+
+    private void LateUpdate()
+    {
+        m_jumpButtonPressed = false;
     }
 
     // Subscribing on events
@@ -51,6 +57,8 @@ internal sealed class PlayerInputHandler : MonoBehaviour
 
         m_playerInputActions.RotationDeltaHorizontal.performed += OnRotationDeltaHorizontalChanged;
         m_playerInputActions.RotationDeltaVertical.performed += OnRotationDeltaVerticalChanged;
+
+        m_playerInputActions.Jump.started += OnJumpButtonPressed;
     }
     // Unsubscribing from events
     private void OnDisable()
@@ -65,6 +73,8 @@ internal sealed class PlayerInputHandler : MonoBehaviour
 
         m_playerInputActions.RotationDeltaHorizontal.performed -= OnRotationDeltaHorizontalChanged;
         m_playerInputActions.RotationDeltaVertical.performed -= OnRotationDeltaVerticalChanged;
+
+        m_playerInputActions.Jump.started -= OnJumpButtonPressed;
 
         m_inputMap.Disable();
     }
@@ -110,6 +120,11 @@ internal sealed class PlayerInputHandler : MonoBehaviour
         m_rotationVertical = Mathf.Clamp(m_rotationVertical, -89f, 89f);
     }
 
+    private void OnJumpButtonPressed(InputAction.CallbackContext context)
+    {
+        m_jumpButtonPressed = true;
+    }
+
     public Vector3 GetMoveDirection()
     {
         Vector3 direction = new Vector3(m_movementHorizontalInput, 0f, m_movementVerticalInput);
@@ -126,5 +141,10 @@ internal sealed class PlayerInputHandler : MonoBehaviour
     public float GetVerticalLookAxis()
     {
         return m_rotationVertical;
+    }
+
+    public bool GetJumpButtonPressed()
+    {
+        return m_jumpButtonPressed;
     }
 }

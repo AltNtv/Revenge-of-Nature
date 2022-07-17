@@ -62,6 +62,15 @@ public partial class @InputMap : IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Jump"",
+                    ""type"": ""Button"",
+                    ""id"": ""316423dd-264e-4567-999b-b4d1491f143c"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -152,6 +161,17 @@ public partial class @InputMap : IInputActionCollection2, IDisposable
                     ""action"": ""RotationDeltaVertical"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""659d57e8-9342-43db-a517-59ad3318a041"",
+                    ""path"": ""<Keyboard>/space"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Mouse + Keyboard"",
+                    ""action"": ""Jump"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -181,6 +201,7 @@ public partial class @InputMap : IInputActionCollection2, IDisposable
         m_PlayerInput_MovementVertical = m_PlayerInput.FindAction("MovementVertical", throwIfNotFound: true);
         m_PlayerInput_RotationDeltaHorizontal = m_PlayerInput.FindAction("RotationDeltaHorizontal", throwIfNotFound: true);
         m_PlayerInput_RotationDeltaVertical = m_PlayerInput.FindAction("RotationDeltaVertical", throwIfNotFound: true);
+        m_PlayerInput_Jump = m_PlayerInput.FindAction("Jump", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -244,6 +265,7 @@ public partial class @InputMap : IInputActionCollection2, IDisposable
     private readonly InputAction m_PlayerInput_MovementVertical;
     private readonly InputAction m_PlayerInput_RotationDeltaHorizontal;
     private readonly InputAction m_PlayerInput_RotationDeltaVertical;
+    private readonly InputAction m_PlayerInput_Jump;
     public struct PlayerInputActions
     {
         private @InputMap m_Wrapper;
@@ -252,6 +274,7 @@ public partial class @InputMap : IInputActionCollection2, IDisposable
         public InputAction @MovementVertical => m_Wrapper.m_PlayerInput_MovementVertical;
         public InputAction @RotationDeltaHorizontal => m_Wrapper.m_PlayerInput_RotationDeltaHorizontal;
         public InputAction @RotationDeltaVertical => m_Wrapper.m_PlayerInput_RotationDeltaVertical;
+        public InputAction @Jump => m_Wrapper.m_PlayerInput_Jump;
         public InputActionMap Get() { return m_Wrapper.m_PlayerInput; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -273,6 +296,9 @@ public partial class @InputMap : IInputActionCollection2, IDisposable
                 @RotationDeltaVertical.started -= m_Wrapper.m_PlayerInputActionsCallbackInterface.OnRotationDeltaVertical;
                 @RotationDeltaVertical.performed -= m_Wrapper.m_PlayerInputActionsCallbackInterface.OnRotationDeltaVertical;
                 @RotationDeltaVertical.canceled -= m_Wrapper.m_PlayerInputActionsCallbackInterface.OnRotationDeltaVertical;
+                @Jump.started -= m_Wrapper.m_PlayerInputActionsCallbackInterface.OnJump;
+                @Jump.performed -= m_Wrapper.m_PlayerInputActionsCallbackInterface.OnJump;
+                @Jump.canceled -= m_Wrapper.m_PlayerInputActionsCallbackInterface.OnJump;
             }
             m_Wrapper.m_PlayerInputActionsCallbackInterface = instance;
             if (instance != null)
@@ -289,6 +315,9 @@ public partial class @InputMap : IInputActionCollection2, IDisposable
                 @RotationDeltaVertical.started += instance.OnRotationDeltaVertical;
                 @RotationDeltaVertical.performed += instance.OnRotationDeltaVertical;
                 @RotationDeltaVertical.canceled += instance.OnRotationDeltaVertical;
+                @Jump.started += instance.OnJump;
+                @Jump.performed += instance.OnJump;
+                @Jump.canceled += instance.OnJump;
             }
         }
     }
@@ -308,5 +337,6 @@ public partial class @InputMap : IInputActionCollection2, IDisposable
         void OnMovementVertical(InputAction.CallbackContext context);
         void OnRotationDeltaHorizontal(InputAction.CallbackContext context);
         void OnRotationDeltaVertical(InputAction.CallbackContext context);
+        void OnJump(InputAction.CallbackContext context);
     }
 }
